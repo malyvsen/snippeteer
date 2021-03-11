@@ -6,7 +6,8 @@ authors = ["malyvsen"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
+attrs = "^20.3.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
