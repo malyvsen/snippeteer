@@ -49,12 +49,15 @@ class Imports:
             },
         )
 
-    @cached_property
-    def names(self):
-        return set(module.renamed for module in self.modules) | set(
-            variable.renamed
-            for variables in self.variables.values()
+    def name_modules(self, name) -> Set[str]:
+        """The set of modules from which the name could have come from"""
+        return set(
+            module.original for module in self.modules if module.renamed == name
+        ) | set(
+            module
+            for module, variables in self.variables.items()
             for variable in variables
+            if variable.renamed == name
         )
 
     def __or__(self, other):

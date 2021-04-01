@@ -62,6 +62,17 @@ def function(arg):
     )
 
 
+def test_name_modules():
+    code = """
+import numpy as np
+from cv2 import secret
+    """
+    parsed_code = ast.parse(code, mode="exec")
+    assert Imports.from_ast(parsed_code).name_modules("np") == {"numpy"}
+    assert Imports.from_ast(parsed_code).name_modules("secret") == {"cv2"}
+    assert Imports.from_ast(parsed_code).name_modules("not_imported") == set()
+
+
 def test_unequal():
     code = "def x(): pass"
     parsed_code = ast.parse(code, mode="exec")
