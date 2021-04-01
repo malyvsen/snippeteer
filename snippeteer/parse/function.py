@@ -12,7 +12,7 @@ class Function:
     name: str
     docstring: Union[str, None]
     arguments: List[str]
-    returns: List[str]
+    returns: Set[str]
     dependencies: Set[str]
     # side_effects: bool  # TODO
     num_operations: int
@@ -52,8 +52,10 @@ class Function:
                 )
                 if arg is not None
             ],
-            returns=descend(
-                function_def.body, handlers={ast.Return: extract_returned_names}
+            returns=set(
+                descend(
+                    function_def.body, handlers={ast.Return: extract_returned_names}
+                )
             ),
             dependencies=reduce(
                 set.union,
