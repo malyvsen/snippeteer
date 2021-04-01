@@ -4,6 +4,9 @@ from .node_children import node_children
 
 
 def descend(ast_node, handlers, combiner=list.__add__, initial=[]):
+    if isinstance(ast_node, str):
+        raise TypeError("descend should only be used for parsed code, not strings")
+
     for node_type, handler in handlers.items():
         if isinstance(ast_node, node_type):
             return handler(ast_node)
