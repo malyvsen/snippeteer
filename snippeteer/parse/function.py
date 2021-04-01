@@ -1,23 +1,24 @@
-from typing import List, Set, Union
+from typing import List, FrozenSet, Union
+from dataclasses import dataclass
 from itertools import chain
 from functools import reduce
 import ast
-import attr
 from .imports import Imports
 from .ast_utils import descend, node_children
 
 
-@attr.s(auto_attribs=True)
+@dataclass(frozen=True)
 class Function:
     name: str
     docstring: Union[str, None]
     arguments: List[str]
-    returns: Set[str]
-    dependencies: Set[str]
-    # side_effects: bool  # TODO
+    returns: FrozenSet[str]
+    dependencies: FrozenSet[str]
+    # side_effects: bool TODO
     num_operations: int
     first_line: int
     last_line: int
+    # keywords: FrozenSet[str] TODO
 
     @classmethod
     def from_ast(cls, imports: Imports, function_def: ast.FunctionDef):
@@ -52,15 +53,15 @@ class Function:
                 )
                 if arg is not None
             ],
-            returns=set(
+            returns=frozenset(
                 descend(
                     function_def.body, handlers={ast.Return: extract_returned_names}
                 )
             ),
             dependencies=reduce(
-                set.union,
+                frozenset.union,
                 [imports.name_modules(variable) for variable in used_variables],
-                set(),
+                frozenset(),
             ),
             num_operations=descend(
                 function_def.body,

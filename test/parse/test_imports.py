@@ -1,4 +1,6 @@
 import ast
+import dataclasses
+import pytest
 from snippeteer.parse.imports import Imports
 
 
@@ -82,3 +84,9 @@ def test_unequal():
     assert not Imports.from_ast(parsed_code) == Imports(
         modules={Imports.Alias(original="numpy", renamed="np")}
     )
+
+
+def test_mutation_attempt():
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        imports = Imports(modules=frozenset())
+        imports.modules = frozenset({"x"})
