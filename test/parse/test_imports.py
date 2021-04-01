@@ -45,6 +45,18 @@ def function(arg):
     )
 
 
+def test_nested():
+    code = """
+def function(arg):
+    import sneaky_import
+    return arg + 1
+    """
+    parsed_code = ast.parse(code, mode="exec")
+    assert Imports.from_ast(parsed_code) == Imports(
+        modules={Imports.Alias(original="sneaky_import", renamed="sneaky_import")}
+    )
+
+
 def test_unequal():
     code = "def x(): pass"
     parsed_code = ast.parse(code, mode="exec")
