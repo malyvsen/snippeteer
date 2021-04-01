@@ -1,4 +1,4 @@
-from typing import List, FrozenSet, Union
+from typing import Tuple, FrozenSet, Union
 from dataclasses import dataclass
 from itertools import chain
 from functools import reduce
@@ -11,7 +11,7 @@ from .ast_utils import descend, node_children
 class Function:
     name: str
     docstring: Union[str, None]
-    arguments: List[str]
+    arguments: Tuple[str]
     returns: FrozenSet[str]
     dependencies: FrozenSet[str]
     # side_effects: bool TODO
@@ -42,7 +42,7 @@ class Function:
         return cls(
             name=function_def.name,
             docstring=docstring,
-            arguments=[
+            arguments=tuple(
                 arg.arg
                 for arg in chain(
                     function_def.args.posonlyargs,
@@ -52,7 +52,7 @@ class Function:
                     [function_def.args.kwarg],
                 )
                 if arg is not None
-            ],
+            ),
             returns=frozenset(
                 descend(
                     function_def.body, handlers={ast.Return: extract_returned_names}

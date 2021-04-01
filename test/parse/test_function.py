@@ -11,7 +11,7 @@ def test_tiny():
     ) == Function(
         name="f",
         docstring=None,
-        arguments=["arg"],
+        arguments=("arg",),
         returns=set(),
         dependencies=set(),
         num_operations=1,
@@ -32,7 +32,7 @@ def f(arg):
     ) == Function(
         name="f",
         docstring=None,
-        arguments=["arg"],
+        arguments=("arg",),
         returns={"x", "y"},
         dependencies=set(),
         num_operations=2,
@@ -50,7 +50,7 @@ def test_imports():
     ) == Function(
         name="f",
         docstring=None,
-        arguments=["arg"],
+        arguments=("arg",),
         returns=set(),
         dependencies={"numpy"},
         num_operations=2,
