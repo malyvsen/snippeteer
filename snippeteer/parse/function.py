@@ -1,24 +1,25 @@
 from typing import Tuple, FrozenSet, Union
 from dataclasses import dataclass
 from itertools import chain
-from functools import reduce
+from functools import reduce, cached_property
 import ast
 from .imports import Imports
-from .ast_utils import descend, node_children
+from .names import split_name
+from .ast_utils import descend, node_children, extract_names
 
 
 @dataclass(frozen=True)
 class Function:
     name: str
+    keywords: FrozenSet[str]
     docstring: Union[str, None]
     arguments: Tuple[str]
     returns: FrozenSet[str]
     dependencies: FrozenSet[str]
-    # side_effects: bool TODO
+    # side_effects: bool TODO - maybe just check if uses the global keyword?
     num_operations: int
     first_line: int
     last_line: int
-    # keywords: FrozenSet[str] TODO
 
     @classmethod
     def from_ast(cls, imports: Imports, function_def: ast.FunctionDef):
@@ -27,10 +28,15 @@ class Function:
         except AttributeError:
             docstring = None
 
-        used_variables = descend(
-            function_def, handlers={ast.Name: lambda name: [name.id]}
+        variables = frozenset(
+            descend(function_def, handlers={ast.Name: lambda name: [name.id]})
         )  # intentionally descending whole function (not just body) to also get decorators
-        # TODO: cv2 = 3 will count as using the cv2 module (it shouldn't)
+
+        dependencies = reduce(
+            frozenset.union,
+            [imports.name_modules(variable) for variable in variables],
+            frozenset(),
+        )
 
         leaf_node_types = [
             node_type
@@ -41,6 +47,14 @@ class Function:
 
         return cls(
             name=function_def.name,
+            keywords=frozenset(
+                keyword
+                for name in chain(
+                    extract_names(function_def),
+                    dependencies,
+                )
+                for keyword in split_name(name)
+            ),
             docstring=docstring,
             arguments=tuple(
                 arg.arg
@@ -58,11 +72,7 @@ class Function:
                     function_def.body, handlers={ast.Return: extract_returned_names}
                 )
             ),
-            dependencies=reduce(
-                frozenset.union,
-                [imports.name_modules(variable) for variable in used_variables],
-                frozenset(),
-            ),
+            dependencies=dependencies,
             num_operations=descend(
                 function_def.body,
                 handlers={node_type: lambda node: 1 for node_type in leaf_node_types},

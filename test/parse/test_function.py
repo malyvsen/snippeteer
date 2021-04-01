@@ -6,10 +6,10 @@ from snippeteer.parse.function import Function
 def test_tiny():
     code = "def f(arg): pass"
     parsed_code = ast.parse(code, mode="exec")
-    assert Function.from_ast(
-        imports=Imports(), function_def=parsed_code.body[0]
-    ) == Function(
+    function = Function.from_ast(imports=Imports(), function_def=parsed_code.body[0])
+    assert function == Function(
         name="f",
+        keywords={"f", "arg"},
         docstring=None,
         arguments=("arg",),
         returns=set(),
@@ -27,10 +27,10 @@ def f(arg):
     return y
     """
     parsed_code = ast.parse(code, mode="exec")
-    assert Function.from_ast(
-        imports=Imports(), function_def=parsed_code.body[0]
-    ) == Function(
+    function = Function.from_ast(imports=Imports(), function_def=parsed_code.body[0])
+    assert function == Function(
         name="f",
+        keywords={"f", "arg", "x", "y"},
         docstring=None,
         arguments=("arg",),
         returns={"x", "y"},
@@ -44,11 +44,13 @@ def f(arg):
 def test_imports():
     code = "def f(arg): return np.square(arg)"
     parsed_code = ast.parse(code, mode="exec")
-    assert Function.from_ast(
+    function = Function.from_ast(
         imports=Imports(modules={Imports.Alias(original="numpy", renamed="np")}),
         function_def=parsed_code.body[0],
-    ) == Function(
+    )
+    assert function == Function(
         name="f",
+        keywords={"f", "arg", "np", "square", "numpy"},
         docstring=None,
         arguments=("arg",),
         returns=set(),

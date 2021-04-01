@@ -16,6 +16,9 @@ def normalize(vector):
         functions={
             Function(
                 name="normalize",
+                keywords=frozenset(
+                    {"normalize", "vector", "np", "numpy", "sqrt", "sum"}
+                ),
                 docstring=None,
                 arguments=("vector",),
                 returns=frozenset(),
@@ -43,6 +46,7 @@ def length(vector):
         functions={
             Function(
                 name="normalize",
+                keywords=frozenset({"normalize", "vector", "length"}),
                 docstring=None,
                 arguments=("vector",),
                 returns=frozenset(),
@@ -53,6 +57,7 @@ def length(vector):
             ),
             Function(
                 name="length",
+                keywords=frozenset({"length", "vector", "np", "numpy", "sqrt", "sum"}),
                 docstring=None,
                 arguments=("vector",),
                 returns=frozenset(),
