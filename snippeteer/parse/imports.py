@@ -43,8 +43,9 @@ class Imports:
     def from_import_from_statement(cls, import_from_statement: ast.ImportFrom):
         return cls(
             variables={
-                import_from_statement.module: cls.Alias.from_ast(alias)
-                for alias in import_from_statement.names
+                import_from_statement.module: {
+                    cls.Alias.from_ast(alias) for alias in import_from_statement.names
+                }
             },
         )
 
@@ -59,5 +60,13 @@ class Imports:
     def __or__(self, other):
         return type(self)(
             modules=self.modules | other.modules,
-            variables={**self.variables, **other.variables},
+            variables={
+                module: set.union(
+                    self.variables[module] if module in self.variables else set(),
+                    other.variables[module] if module in other.variables else set(),
+                )
+                for module in set(self.variables.keys()).union(
+                    set(other.variables.keys())
+                )
+            },
         )

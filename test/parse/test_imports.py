@@ -11,13 +11,18 @@ def test_alias():
 
 
 def test_from():
-    code = "from sklearn.tree import DecisionTreeClassifier"
+    code = """
+from sklearn.tree import DecisionTreeClassifier, SomethingElse as SE
+    """
     parsed_code = ast.parse(code, mode="exec")
     assert Imports.from_ast(parsed_code) == Imports(
         variables={
-            "sklearn.tree": Imports.Alias(
-                original="DecisionTreeClassifier", renamed="DecisionTreeClassifier"
-            )
+            "sklearn.tree": {
+                Imports.Alias(
+                    original="DecisionTreeClassifier", renamed="DecisionTreeClassifier"
+                ),
+                Imports.Alias(original="SomethingElse", renamed="SE"),
+            }
         }
     )
 
@@ -38,9 +43,9 @@ def function(arg):
             Imports.Alias(original="numpy", renamed="np"),
         },
         variables={
-            "sklearn.tree": Imports.Alias(
-                original="DecisionTreeClassifier", renamed="TC"
-            )
+            "sklearn.tree": {
+                Imports.Alias(original="DecisionTreeClassifier", renamed="TC")
+            }
         },
     )
 
