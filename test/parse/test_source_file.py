@@ -117,11 +117,3 @@ def test_global_docstring():
 def test_import_from():
     code = "from distutils import setup"
     SourceFile.from_code(code)
-
-
-def test_new_problem():
-    code = """
-def function():
-    from a import b
-"""
-    SourceFile.from_code(code)

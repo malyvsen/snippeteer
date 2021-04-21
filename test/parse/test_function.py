@@ -59,3 +59,20 @@ def test_imports():
         first_line=0,
         last_line=1,
     )
+
+
+def test_import_inside_function():
+    code = "def function(): from a import b"
+    parsed_code = ast.parse(code, mode="exec")
+    function = Function.from_ast(imports=Imports(), function_def=parsed_code.body[0])
+    assert function == Function(
+        name="function",
+        keywords={"function", "a", "b"},
+        docstring=None,
+        arguments=(),
+        returns=set(),
+        dependencies=set(),
+        num_operations=1,
+        first_line=0,
+        last_line=1,
+    )
