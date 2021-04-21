@@ -1,5 +1,5 @@
-from typing import Set
-from .node_children import string_children
+from typing import List, Set
+from .nodes import node_types, string_children
 from .descend import descend, descend_children
 
 
@@ -15,4 +15,13 @@ def extract_names(ast_node) -> Set[str]:
         )(child_names)
         for node_type, child_names in string_children.items()
     }
-    return set(descend(ast_node, handlers=name_extractors))
+    return set(descend(ast_node, handlers=name_extractors)) - {None}
+
+
+def extract_line_numbers(ast_node) -> List[int]:
+    extractors = {
+        node_type: lambda node: ([node.lineno] if hasattr(node, "lineno") else [])
+        + descend_children(node, handlers=extractors, combiner=list.__add__, initial=[])
+        for node_type in node_types
+    }
+    return descend(ast_node, handlers=extractors)

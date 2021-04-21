@@ -66,3 +66,8 @@ string_children = {
     ast.arg: ["arg"],
     ast.ExceptHandler: ["name"],
 }
+
+node_types = set(node_children.keys()) | set(string_children.keys())
+leaf_types = {
+    node_type for node_type, children in node_children.items() if len(children) == 0
+}

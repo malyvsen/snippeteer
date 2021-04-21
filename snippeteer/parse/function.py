@@ -5,7 +5,7 @@ from functools import reduce, cached_property
 import ast
 from .imports import Imports
 from .names import split_name
-from .ast_utils import descend, node_children, extract_names
+from .ast_utils import descend, leaf_types, extract_names, extract_line_numbers
 
 
 @dataclass(frozen=True)
@@ -37,13 +37,7 @@ class Function:
             [imports.name_modules(variable) for variable in variables],
             frozenset(),
         )
-
-        leaf_node_types = [
-            node_type
-            for node_type, children in node_children.items()
-            if len(children) == 0
-            if not isinstance(None, node_type)
-        ]
+        line_numbers = extract_line_numbers(function_def)
 
         return cls(
             name=function_def.name,
@@ -75,27 +69,12 @@ class Function:
             dependencies=dependencies,
             num_operations=descend(
                 function_def.body,
-                handlers={node_type: lambda node: 1 for node_type in leaf_node_types},
+                handlers={node_type: lambda node: 1 for node_type in leaf_types},
                 combiner=int.__add__,
                 initial=0,
             ),
-            first_line=descend(
-                function_def,
-                handlers={
-                    node_type: lambda node: node.lineno for node_type in leaf_node_types
-                },
-                combiner=min,
-                initial=float("inf"),
-            )
-            - 1,  # numbering starts from 1
-            last_line=descend(
-                function_def,
-                handlers={
-                    node_type: lambda node: node.lineno for node_type in leaf_node_types
-                },
-                combiner=max,
-                initial=float("-inf"),
-            ),
+            first_line=min(line_numbers) - 1,  # numbering starts from 1
+            last_line=max(line_numbers),
         )
 
 

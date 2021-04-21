@@ -1,6 +1,6 @@
 import functools
 import ast
-from .node_children import node_children
+from .nodes import node_children
 
 
 def descend(ast_node, handlers, combiner=list.__add__, initial=[]):
