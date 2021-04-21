@@ -17,3 +17,9 @@ functions = [
 print(
     f"{len(source_files)}/{len(contents)} parsed successfully, {len(functions)} functions in total"
 )
+
+from collections import Counter
+from .try_parse import try_parse, problems
+
+print("Most common problems:")
+print(Counter(problems))

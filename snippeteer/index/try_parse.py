@@ -10,7 +10,11 @@ def try_parse(content):
         return None
     try:
         return SourceFile.from_code(code)
-    except NotImplementedError:
+    except NotImplementedError as e:
+        problems.append(e.args[0])
         return None
     except SyntaxError:
         return None
+
+
+problems = []
