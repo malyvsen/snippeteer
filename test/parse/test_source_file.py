@@ -104,3 +104,16 @@ except:
             ),
         },
     )
+
+
+def test_global_docstring():
+    code = '"""Global docstring"""'
+    assert SourceFile.from_code(code) == SourceFile(
+        imports=Imports(),
+        functions=frozenset(),
+    )
+
+
+def test_import_from():
+    code = "from distutils import setup"
+    SourceFile.from_code(code)

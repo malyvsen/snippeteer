@@ -12,7 +12,7 @@ node_children = {
     ast.Expression: ["body"],
     ast.Expr: ["value"],
     ast.Import: ["names"],
-    ast.ImportFrom: ["module", "names"],
+    ast.ImportFrom: ["names"],
     ast.alias: [],
     ast.ClassDef: ["bases", "keywords", "decorator_list", "body"],
     ast.Attribute: ["value"],
@@ -58,6 +58,7 @@ node_children = {
 
 string_children = {
     ast.Name: ["id"],
+    ast.ImportFrom: ["module"],
     ast.alias: ["name", "asname"],
     ast.ClassDef: ["name"],
     ast.Attribute: ["attr"],
