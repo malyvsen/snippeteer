@@ -15,6 +15,8 @@ def try_parse(content):
         return None
     except SyntaxError:
         return None
+    except RecursionError:
+        return None
 
 
 problems = []
