@@ -32,10 +32,13 @@ class Function:
             descend(function_def, handlers={ast.Name: lambda name: [name.id]})
         )  # intentionally descending whole function (not just body) to also get decorators
 
-        dependencies = reduce(
-            frozenset.union,
-            [imports.name_modules(variable) for variable in variables],
-            frozenset(),
+        dependencies = (
+            reduce(
+                frozenset.union,
+                [imports.name_modules(variable) for variable in variables],
+                frozenset(),
+            )
+            - frozenset({None})
         )
         line_numbers = extract_line_numbers(function_def)
 

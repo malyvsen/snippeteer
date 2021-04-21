@@ -117,3 +117,12 @@ def test_global_docstring():
 def test_import_from():
     code = "from distutils import setup"
     SourceFile.from_code(code)
+
+
+def test_new():
+    code = """from . import dot
+def function():
+    return dot"""
+    assert SourceFile.from_code(code).imports == Imports(
+        variables={None: frozenset({Imports.Alias(original="dot", renamed="dot")})}
+    )
