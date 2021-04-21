@@ -14,6 +14,3 @@ def try_parse(content):
         return None
     except SyntaxError:
         return None
-    except Exception as e:
-        print(code)
-        raise e
