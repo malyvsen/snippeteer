@@ -35,6 +35,8 @@ node_children = {
     ast.IfExp: ["test", "body", "orelse"],
     ast.While: ["test", "body", "orelse"],
     ast.For: ["target", "iter", "body", "orelse"],
+    ast.Try: ["body", "handlers", "orelse", "finalbody"],
+    ast.ExceptHandler: ["type", "body"],
     ast.Tuple: ["elts"],
     ast.List: ["elts"],
     ast.Set: ["elts"],
@@ -61,4 +63,5 @@ string_children = {
     ast.Attribute: ["attr"],
     ast.FunctionDef: ["name"],
     ast.arg: ["arg"],
+    ast.ExceptHandler: ["name"],
 }

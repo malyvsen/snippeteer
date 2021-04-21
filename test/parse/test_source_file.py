@@ -68,3 +68,39 @@ def length(vector):
             ),
         },
     )
+
+
+def test_try_except():
+    code = """
+try:
+    def f(): pass
+except:
+    def g(): pass
+"""
+    assert SourceFile.from_code(code) == SourceFile(
+        imports=Imports(),
+        functions={
+            Function(
+                name="f",
+                keywords=frozenset({"f"}),
+                docstring=None,
+                arguments=(),
+                returns=frozenset(),
+                dependencies=frozenset(),
+                num_operations=1,
+                first_line=2,
+                last_line=3,
+            ),
+            Function(
+                name="g",
+                keywords=frozenset({"g"}),
+                docstring=None,
+                arguments=(),
+                returns=frozenset(),
+                dependencies=frozenset(),
+                num_operations=1,
+                first_line=4,
+                last_line=5,
+            ),
+        },
+    )
