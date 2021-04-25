@@ -1,0 +1,12 @@
+access_token: "XXX"  # Github token
+start_id: 2000000
+limit: 100000
+page_limit: 15
+
+queries: [
+   "algorithms+language:python",
+   "leetcode+language:python",
+   "hackerrank+language:python",
+   "datastructures+language:python",
+   "machine+learning+language:python"
+]
