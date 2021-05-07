@@ -1,0 +1,31 @@
+<div class="flex w-full h-full text-white shadow rounded-lg border border-gray-600 overflow-hidden">
+	<code class="whitespace-pre-wrap bg-gray-700 p-2 text-sm break-all h-full flex-grow">{{ result.code.strip() }}</code>
+	<div class="w-1/3 bg-gray-600 p-2 flex flex-col">
+		{% if result.docstring %}
+			<p class="ml-1 underline">Docstring</p>
+			<pre class="whitespace-pre-line text-xs break-all ml-1 mb-2">{{ result.docstring.strip() }}</pre>
+		{% endif %}
+		<p class="ml-1 underline">Dependencies</p>
+		<div class="flex flex-wrap text-sm">
+			{% for dep in result.dependencies %}
+				<div class="flex justify-center items-stretch space-x-1 text-center rounded-full bg-red-500 shadow m-1 overflow-hidden">
+					<button class="bg-red-700 w-7 hover:bg-red-800 hover:text-white transition-all duration-100 cursor-pointer flex justify-center items-center outline-none focus:outline-none"
+							title="Exclude results with this"
+							onclick="addFilter('dependencies', '{{ dep }}', true, true)">
+						&Cross;
+					</button>
+					<p class="px-1 py-1 text-xs whitespace-nowrap truncate"
+					   title="{{ dep }}">{{ dep }}</p>
+					<button class="bg-red-700 w-7 hover:bg-red-800 hover:text-white transition-all duration-100 cursor-pointer flex justify-center items-center outline-none focus:outline-none"
+							title="Show more with this"
+							onclick="addFilter('dependencies', '{{ dep }}', false, true)">
+						&check;
+					</button>
+				</div>
+			{% endfor %}
+			{% if not result.dependencies %}
+				<p class="ml-1">None.</p>
+			{% endif %}
+		</div>
+	</div>
+</div>
