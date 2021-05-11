@@ -25,3 +25,21 @@ crawler.perform_searches(config["queries"], page_limit=config["page_limit"])
 
 where `queries` are the queries to be executed and should be specified in the ``config.yml`` file and the `page_limit`
 is the number of pages returned from the query.
+
+
+All extracted repository information is stored in the `data` folder and is of type dictionary mapping the repository id 
+to the information as follows:  
+
+```
+repo_id : {
+          'repo_name': Name of the repository (string),
+          'owner': User id of the owner (string),
+          'html_url': URL of repository (for visiting the Github page) (string),
+          'repo_url': URL of repository (for API) (string),
+          'fork_count': Number of forks (integer),
+          'star_count': Number of stars (integer),
+          'default_branch': Specify if it is the default branch,
+          'contributor_count': Number of contrinutors (integer),
+          'collaborator_count': Number of collaborators (integer),
+          }
+```
