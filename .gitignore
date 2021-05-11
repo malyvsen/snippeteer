@@ -130,3 +130,6 @@ dmypy.json
 
 .vscode/
 /data/
+*.DS_Store
+.idea
+snippeteer/crawl/crawled_info/*
