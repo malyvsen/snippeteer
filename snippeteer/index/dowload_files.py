@@ -91,6 +91,14 @@ def create_list_urls():
 
 	return urls, repos_db
 
+def handle_sql_tables(cur):
+	cur.execute(
+		"""CREATE TABLE IF NOT EXISTS "Repositories" ("repo_id" INTEGER, "name" TEXT, "owner" TEXT, "url" TEXT,
+		"fork_count" INTEGER, "star_count" INTEGER, "contributor_count"	INTEGER,"collaborator_count" INTEGER, 
+		PRIMARY KEY("repo_id"))""""")
+	cur.execute(
+		"""CREATE TABLE IF NOT EXISTS Files ("Name" TEXT, "repo_id" INTEGER, "url" TEXT, "content" BLOB, 
+		"download_url"	TEXT, FOREIGN KEY("repo_id") REFERENCES Repositories("repo_id"))""")
 
 def main():
 	start_time = time.time()
@@ -102,6 +110,9 @@ def main():
 	print(f"list created, there is {len(urls)}repos")
 
 	cur = db.cursor()
+
+	handle_sql_tables(cur)
+
 	cur.executemany("INSERT INTO Repositories VALUES (?, ? ,?, ?, ?, ?, ?, ?)", repos_db)
 
 	entries = parallel_download(urls, download_project)
